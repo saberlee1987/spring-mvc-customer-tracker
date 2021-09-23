@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -34,6 +36,9 @@ public class WebServletConfiguration implements WebMvcConfigurer {
 
     @Autowired
     private MessageSource messageSource;
+
+    @Autowired
+    private SpringValidatorAdapter validatorAdapter;
 
     @Bean
     public ServletContextTemplateResolver templateResolver(ServletContext servletContext) {
@@ -78,5 +83,11 @@ public class WebServletConfiguration implements WebMvcConfigurer {
         SessionLocaleResolver sessionLocaleResolver = new SessionLocaleResolver();
         sessionLocaleResolver.setDefaultLocale(new Locale("en", "US"));
         return sessionLocaleResolver;
+    }
+
+
+    @Override
+    public Validator getValidator() {
+        return this.validatorAdapter;
     }
 }

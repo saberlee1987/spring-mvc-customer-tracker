@@ -13,6 +13,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.persistence.SharedCacheMode;
 import javax.persistence.ValidationMode;
@@ -89,5 +90,11 @@ public class RootContextConfiguration {
         JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
         jpaTransactionManager.setEntityManagerFactory(entityManagerFactoryBean().getObject());
         return jpaTransactionManager;
+    }
+    @Bean
+    public LocalValidatorFactoryBean validatorFactoryBean(){
+        LocalValidatorFactoryBean validatorFactoryBean  = new LocalValidatorFactoryBean();
+        validatorFactoryBean.setValidationMessageSource(messageSource());
+        return validatorFactoryBean;
     }
 }

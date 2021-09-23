@@ -3,6 +3,8 @@ package com.saber.site.repositories.impl;
 import com.saber.site.dto.CustomerDto;
 import com.saber.site.entities.CustomerEntity;
 import com.saber.site.repositories.CustomerRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -14,6 +16,8 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    private static final Logger log = LoggerFactory.getLogger(CustomerRepositoryImpl.class);
 
     @Override
     public List<CustomerEntity> findAll() {
@@ -32,19 +36,43 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 
     @Override
     public CustomerEntity updateCustomer(CustomerDto customerDto, Integer id) {
-
+        CustomerEntity customerEntity = findById(id);
+        if (customerEntity != null) {
+            customerEntity.setFirstName(customerDto.getFirstName());
+            customerEntity.setLastName(customerDto.getLastName());
+            customerEntity.setEmail(customerDto.getEmail());
+            this.entityManager.persist(customerEntity);
+            return customerEntity;
+        }
         return null;
     }
 
     @Override
     public CustomerEntity findById(Integer id) {
-        return entityManager.createNamedQuery("CustomerEntity.findById",CustomerEntity.class)
-                .setParameter("id",id).getSingleResult();
+        try {
+            return entityManager.createNamedQuery("CustomerEntity.findById", CustomerEntity.class)
+                    .setParameter("id", id).getSingleResult();
+
+        }catch (Exception ex){
+            log.error("customer does not exist with id {}",id);
+            return null;
+        }
     }
 
     @Override
     public boolean deleteCustomerById(Integer id) {
-        return false;
+        CustomerEntity customerEntity = findById(id);
+        if (customerEntity == null) {
+            return false;
+        }
+        try {
+            this.entityManager.remove(customerEntity);
+            log.info("customer by id {} removed", id);
+            return true;
+        } catch (Exception ex) {
+            log.error("Error when deleting customer by id {} ===> {}", id, ex.getMessage());
+            return false;
+        }
     }
 
     private CustomerEntity createEntity(CustomerDto dto) {

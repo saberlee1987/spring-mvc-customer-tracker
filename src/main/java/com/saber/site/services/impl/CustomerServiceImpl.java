@@ -4,10 +4,8 @@ import com.saber.site.dto.CustomerDto;
 import com.saber.site.entities.CustomerEntity;
 import com.saber.site.repositories.CustomerRepository;
 import com.saber.site.services.CustomerService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -33,7 +31,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public CustomerEntity updateCustomer(CustomerDto customerDto, Integer id) {
-        return null;
+        return this.customerRepository.updateCustomer(customerDto,id);
     }
 
     @Override
@@ -45,6 +43,6 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional()
     public boolean deleteCustomerById(Integer id) {
-        return false;
+        return this.customerRepository.deleteCustomerById(id);
     }
 }

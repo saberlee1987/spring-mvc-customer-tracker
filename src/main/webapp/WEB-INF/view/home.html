@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+    <link rel="stylesheet" th:href="@{/resources/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/resources/css/home.css}">
+</head>
+<body>
+<!--/*@thymesVar id="colors" type="java.util.List<java.lang.String>"*/-->
+
+    <h3>this is Home Page</h3>
+    <a th:href="@{/customer/list}">Customer List</a>
+
+    <p th th:text="#{welcome.thymeleaf}"></p>
+
+
+    <table class="table table-striped table-hover" >
+        <tr>
+            <th>colors</th>
+        </tr>
+
+        <tr th:each="color:${colors}">
+            <th th:text="${color}">colorName</th>
+        </tr>
+    </table>
+</body>
+</html>
